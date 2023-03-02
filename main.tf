@@ -8,6 +8,7 @@ locals {
 module "networking" {
   source           = "./networking"
   vpc_cidr         = local.vpc_cidr
+  access_ip        = var.access_ip
   private_sn_count = 2
   public_sn_count  = 2
   public_cidrs     = [for i in range(0, 2, 1) : cidrsubnet(local.vpc_cidr, 2, i)]

@@ -1,5 +1,9 @@
 # -------- networking/main.tf --------
 
+data "aws_availability_zones" "available" {
+  
+}
+
 resource "random_integer" "random" {
     min = 1
     max = 100
@@ -20,7 +24,7 @@ resource "aws_subnet" "dev_public_subnet" {
     vpc_id = aws_vpc.dev_vpc.id
     cidr_block = var.public_cidrs[count.index]
     map_public_ip_on_launch = true
-    availability_zone = ["ap-southeast-1a","ap-southeast-1b"][count.index]
+    availability_zone = data.aws_availability_zones.available.names[count.index]
     
     tags ={
         Name = "dev-public-${count.index + 1}"
@@ -33,7 +37,7 @@ resource "aws_subnet" "dev_private_subnet" {
   vpc_id = aws_vpc.dev_vpc.id
   cidr_block = var.private_cidrs[count.index]
   map_public_ip_on_launch = false
-  availability_zone = ["ap-southeast-1a","ap-southeast-1b"][count.index]
+  availability_zone = data.aws_availability_zones.available.names[count.index]
 
   tags = {
     "Name" = "dev-private-${count.index + 1}"

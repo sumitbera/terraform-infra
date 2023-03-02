@@ -17,6 +17,9 @@ resource "aws_vpc" "dev_vpc" {
     tags = {
         Name = "dev-vpc-${random_integer.random.id}"
     }
+    lifecycle {
+      create_before_destroy = true
+    }
 }
 
 resource "aws_subnet" "dev_public_subnet" {

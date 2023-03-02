@@ -11,6 +11,31 @@ resource "aws_vpc" "dev_vpc" {
     enable_dns_support = true
 
     tags = {
-        Name = "dev_vpc-${random_integer.random.id}"
+        Name = "dev-vpc-${random_integer.random.id}"
     }
+}
+
+resource "aws_subnet" "dev_public_subnet" {
+    count = length(var.public_cidrs)
+    vpc_id = aws_vpc.dev_vpc.id
+    cidr_block = var.public_cidrs[count.index]
+    map_public_ip_on_launch = true
+    availability_zone = ["ap-southeast-1a","ap-southeast-1b"][count.index]
+    
+    tags ={
+        Name = "dev-public-${count.index + 1}"
+    }
+  
+}
+
+resource "aws_subnet" "dev_private_subnet" {
+  count = length(var.private_cidrs)
+  vpc_id = aws_vpc.dev_vpc.id
+  cidr_block = var.private_cidrs[count.index]
+  map_public_ip_on_launch = false
+  availability_zone = ["ap-southeast-1a","ap-southeast-1b"][count.index]
+
+  tags = {
+    "Name" = "dev-private-${count.index + 1}"
+  }
 }

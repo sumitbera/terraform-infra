@@ -29,7 +29,13 @@ resource "aws_subnet" "dev_public_subnet" {
     tags ={
         Name = "dev-public-${count.index + 1}"
     }
-  
+ 
+}
+
+resource "aws_route_table_association" "public-rt-association" {
+  count = var.public_sn_count
+  subnet_id = aws_subnet.dev_public_subnet.*.id[count.index]
+  route_table_id = aws_route_table.dev-public-rt.id
 }
 
 resource "aws_subnet" "dev_private_subnet" {
@@ -41,5 +47,35 @@ resource "aws_subnet" "dev_private_subnet" {
 
   tags = {
     "Name" = "dev-private-${count.index + 1}"
+  }
+}
+
+resource "aws_internet_gateway" "dev_internet_gateway" {
+  vpc_id = aws_vpc.dev_vpc.id
+
+  tags = {
+    "Name" = "dev_igw"
+  }
+}
+
+resource "aws_route_table" "dev-public-rt" {
+  vpc_id = aws_vpc.dev_vpc.id
+
+  tags = {
+    "Name" = "public-rt"
+  }
+}
+
+resource "aws_route" "default_route" {
+    route_table_id = aws_route_table.dev-public-rt.id
+    destination_cidr_block = "0.0.0.0/0"
+    gateway_id = aws_internet_gateway.dev_internet_gateway.id
+}
+
+resource "aws_default_route_table" "dev-private-rt" {
+  default_route_table_id = aws_vpc.dev_vpc.default_route_table_id
+
+  tags = {
+    "Name" = "private-rt"
   }
 }

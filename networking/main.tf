@@ -84,20 +84,29 @@ resource "aws_default_route_table" "dev-private-rt" {
 }
 
 resource "aws_security_group" "dev-sg" {
-  name = "dev-public-sg"
-  description = "vpc public access"
+  for_each = var.security_groups
+  name = each.value.name
+  description = each.value.description
   vpc_id = aws_vpc.dev_vpc.id
-  ingress {
-    from_port = 22
-    to_port = 22
-    protocol = "tcp"
-    cidr_blocks = [var.access_ip]
+  dynamic "ingress" {
+    for_each = each.value.ingress
+    content{
+    from_port = ingress.value.from
+    to_port = ingress.value.to
+    protocol = ingress.value.protocol
+    cidr_blocks = ingress.value.cidr_blocks
+    description = ingress.value.description
+    }
   }
 
-  egress {
-    from_port = 0
-    to_port = 0
-    protocol = "-1"
-    cidr_blocks = ["0.0.0.0/0"]
+  dynamic "egress" {
+    for_each = each.value.egress
+    content{
+    from_port = egress.value.from
+    to_port = egress.value.to
+    protocol = egress.value.protocol
+    cidr_blocks = egress.value.cidr_blocks
+    description = egress.value.description
+    }
   }
 }

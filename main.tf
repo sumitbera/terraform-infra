@@ -18,5 +18,6 @@ module "compute" {
   instance_count = 1
   instance_type  = "t2.micro"
   volume_size    = 10
-  key_name = "testaut"
+  key_name       = "testaut"
+  user_data_path = "${file("init.sh")}"
 }

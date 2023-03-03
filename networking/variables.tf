@@ -23,3 +23,7 @@ variable "private_sn_count"{
 variable "access_ip"{
   type = string
 }
+
+variable "security_groups"{
+  
+}

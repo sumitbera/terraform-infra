@@ -26,7 +26,7 @@ resource "aws_instance" "dev-grafana" {
     }
 vpc_security_group_ids = [var.public_sg]
 subnet_id = var.public_subnets[count.index]
-
+user_data = var.user_data_path
 root_block_device {
     volume_size = var.volume_size
 }

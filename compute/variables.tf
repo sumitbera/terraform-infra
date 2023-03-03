@@ -6,3 +6,4 @@ variable "volume_size" {}
 variable "public_sg" {}
 variable "public_subnets" {}
 variable "key_name" {}
+variable "user_data_path" {}

@@ -21,3 +21,14 @@ module "compute" {
   key_name       = "testaut"
   user_data_path = file("init.sh")
 }
+
+module "ecs" {
+  source = "./ecs"
+  public_sg      = module.networking.public_sg
+  public_subnets = module.networking.public_subnets
+  desired_count = 1
+  cluster_name = "load-test-cluster"
+  service_name = "load-test-service"
+  launch_type = "FARGATE"
+  platform_version = "LATEST"
+}

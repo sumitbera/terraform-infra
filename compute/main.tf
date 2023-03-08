@@ -22,7 +22,7 @@ resource "aws_instance" "dev-grafana-influxdb" {
     key_name = var.key_name
 
     tags ={
-        Name = "dev-grafana-influxdb${random_id.dev-grafana-id[count.index].dec}"
+        Name = "dev-grafana-influxfb-id${random_id.dev-grafana-influxfb-id[count.index].dec}"
     }
 vpc_security_group_ids = [var.public_sg]
 subnet_id = var.public_subnets[count.index]

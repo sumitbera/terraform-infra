@@ -1,3 +1,5 @@
+# -------- ecs/variables.tf ------------
+
 variable "cluster_name" {
   type = string
 }

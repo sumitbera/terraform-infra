@@ -28,6 +28,14 @@ module "iamrole" {
   ecs_agent_profile = "ecs-load-test-profile"
 }
 
+module "autoscaling" {
+  source         = "./autoscaling"
+  public_sg      = module.networking.public_sg
+  instance_profile = module.iamrole.instance_profile
+  instance_type  = "t2.medium"
+  user_data_path = file("ecs-user-data.sh")
+}
+
 module "ecs" {
   source           = "./ecs"
   public_sg        = module.networking.public_sg
